@@ -6,6 +6,8 @@ const colors = document.getElementsByClassName("jscolor");
 // size range of paintBall
 const range = document.querySelector("#jsRange");
 
+const mode = document.getElementById("jsMode");
+
 //
 ctx.strokeStyle = "black";
 ctx.lineWidth = 2.5;
@@ -16,6 +18,7 @@ canvas.height = 700;
 
 let painting = false;
 
+let filling = false;
 
 //////////////////////////////////////////////////////////////
 
@@ -58,10 +61,16 @@ function handleRangeChange(event) {
     const linesize = event.target.value;
     ctx.lineWidth = linesize;
 }
-//
-function fillCanvas(event) {
-    //const color = event.target.style.backgroundColor;
-    //canvas.style.backgroundColor = "black";
+
+// 내가 만들지 않은 메소드의 오타를 주의하자
+function handleModeClick(event) {
+    if (filling === true) {
+        filling = false;
+        mode.innerText = "Fill";
+    } else {
+        filling = true;
+        mode.innerText = "Paint";
+    }
 }
 //
 if (canvas) {
@@ -73,6 +82,10 @@ if (canvas) {
 
 //Array.from 메소드 - 오브젝으로 부터 array를 만든다.
 //console.log(Array.from(colors));
+
+if (mode) {
+    mode.addEventListener("click", handleModeClick);
+}
 
 if (colors) {
     Array.from(colors).forEach(color =>
