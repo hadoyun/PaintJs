@@ -1,3 +1,7 @@
+//reset css가 먹히지 않는 문제
+
+
+
 //canvas elment는 픽셀을 다룬다.
 const canvas = document.querySelector("#jsCanvas");
 // 픽셀들을 컨트롤하기 위해 가져온다.
@@ -7,11 +11,17 @@ const colors = document.getElementsByClassName("jscolor");
 const range = document.querySelector("#jsRange");
 
 const mode = document.getElementById("jsMode");
+const saveBtn = document.getElementById("jsSave");
 
 const INITIAL_COLOR = "black";
 const CANVAS_SIZE_WIDTH = 700;
 const CANVAS_SIZE_HEIGHT = 700;
-//
+
+//save 전에 pixel mpc가 배경을 칠하지 않아 투명색으로 인식된다.
+//따라서 defuault 배경을 색을 정해준다.
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT);
+
 ctx.strokeStyle = INITIAL_COLOR;
 ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
@@ -22,7 +32,7 @@ canvas.height = CANVAS_SIZE_HEIGHT;
 
 let painting = false;
 
-let filling = false;
+let bgfilling = false;
 
 //////////////////////////////////////////////////////////////
 
@@ -70,20 +80,35 @@ function handleRangeChange(event) {
 
 // 내가 만들지 않은 메소드의 오타를 주의하자
 function handleModeClick(event) {
-    if (filling === true) {
-        filling = false;
-        mode.innerText = "Fill";
+    if (bgfilling === true) {
+        bgfilling = false;
+        mode.innerText = "paint";
     } else {
-        filling = true;
-        mode.innerText = "Paint";
+        bgfilling = true;
+        mode.innerText = "fill";
         //ctx.fillStyle = ctx.strokeStyle;
     }
 }
 
 function handleCanvasClick() {
-    if (filling === false) {
+    if (bgfilling === true) {
         ctx.fillRect(0, 0, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT);
     }
+}
+
+//우클릭 방지
+function handleCM(event) {
+    event.preventDefault();
+}
+
+function saveClick() {
+    const image = canvas.toDataURL("image/png");
+    //console.log(image);
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = "paintJS[your paint!]";
+    //console.log(link);
+    link.click();
 }
 
 //
@@ -93,6 +118,8 @@ if (canvas) {
     canvas.addEventListener("mouseup", stopPainting);
     canvas.addEventListener("mouseleave", stopPainting);
     canvas.addEventListener("click", handleCanvasClick);
+    //contextmenu로의 접근을 막는다.
+    canvas.addEventListener("contextmenu", handleCM);
 }
 
 //Array.from 메소드 - 오브젝으로 부터 array를 만든다.
@@ -110,4 +137,8 @@ if (colors) {
 
 if (range) {
     range.addEventListener("input", handleRangeChange);
+}
+
+if (saveBtn) {
+    saveBtn.addEventListener("click", saveClick);
 }
