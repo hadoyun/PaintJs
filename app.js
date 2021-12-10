@@ -3,6 +3,8 @@ const canvas = document.querySelector("#jsCanvas");
 // 픽셀들을 컨트롤하기 위해 가져온다.
 const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("jscolor");
+// size range of paintBall
+const range = document.querySelector("#jsRange");
 
 //
 ctx.strokeStyle = "black";
@@ -30,6 +32,7 @@ function onMouseMove(event) {
     const x = event.offsetX;
     const y = event.offsetY;
 
+    // paint
     if (!painting) {
         ctx.beginPath();
         ctx.moveTo(x, y);
@@ -51,6 +54,16 @@ function handleColorClick(event) {
     ctx.strokeStyle = color;
 }
 
+function handleRangeChange(event) {
+    const linesize = event.target.value;
+    ctx.lineWidth = linesize;
+}
+//
+function fillCanvas(event) {
+    //const color = event.target.style.backgroundColor;
+    //canvas.style.backgroundColor = "black";
+}
+//
 if (canvas) {
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mousedown", startPainting);
@@ -61,6 +74,12 @@ if (canvas) {
 //Array.from 메소드 - 오브젝으로 부터 array를 만든다.
 //console.log(Array.from(colors));
 
-Array.from(colors).forEach(color =>
-    color.addEventListener("click", handleColorClick)
-);
+if (colors) {
+    Array.from(colors).forEach(color =>
+        color.addEventListener("click", handleColorClick)
+    );
+}
+
+if (range) {
+    range.addEventListener("input", handleRangeChange);
+}
