@@ -8,13 +8,17 @@ const range = document.querySelector("#jsRange");
 
 const mode = document.getElementById("jsMode");
 
+const INITIAL_COLOR = "black";
+const CANVAS_SIZE_WIDTH = 700;
+const CANVAS_SIZE_HEIGHT = 700;
 //
-ctx.strokeStyle = "black";
+ctx.strokeStyle = INITIAL_COLOR;
+ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
 
 //ctx는 2가지 사이즈를 줘야한다. pixel modifier
-canvas.width = 700;
-canvas.height = 700;
+canvas.width = CANVAS_SIZE_WIDTH;
+canvas.height = CANVAS_SIZE_HEIGHT;
 
 let painting = false;
 
@@ -55,6 +59,8 @@ function handleColorClick(event) {
     //console.log(color);
     //ctx.strokeStyle overriding
     ctx.strokeStyle = color;
+
+    ctx.fillStyle = color;
 }
 
 function handleRangeChange(event) {
@@ -70,14 +76,23 @@ function handleModeClick(event) {
     } else {
         filling = true;
         mode.innerText = "Paint";
+        //ctx.fillStyle = ctx.strokeStyle;
     }
 }
+
+function handleCanvasClick() {
+    if (filling) {
+        ctx.fillRect(0, 0, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT);
+    }
+}
+
 //
 if (canvas) {
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mousedown", startPainting);
     canvas.addEventListener("mouseup", stopPainting);
     canvas.addEventListener("mouseleave", stopPainting);
+    canvas.addEventListener("click", handleCanvasClick);
 }
 
 //Array.from 메소드 - 오브젝으로 부터 array를 만든다.
